@@ -4,13 +4,22 @@ const map = L.map('map', {
     attributionControl: false,
     tap: false, // Fixes some click issues on mobile
     bounceAtZoomLimits: false
-}).setView([20, 0], 3);
+}).setView([19.2177, -98.9880], 16);
 
 // High Quality Dark Tiles
 const darkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     maxZoom: 20,
     minZoom: 2
 }).addTo(map);
+
+// Default Marker for User Location
+L.circleMarker([19.2177, -98.9880], {
+    radius: 10,
+    fillColor: "#00e5ff",
+    color: "#fff",
+    weight: 2,
+    fillOpacity: 0.7
+}).addTo(map).bindPopup("Ignacio Zaragoza, San Antonio Tecomitl").openPopup();
 
 // DOM Elements
 const searchPanel = document.getElementById('search-panel');
