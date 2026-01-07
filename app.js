@@ -4,7 +4,7 @@ const map = L.map('map', {
     attributionControl: false,
     tap: false, // Fixes some click issues on mobile
     bounceAtZoomLimits: false
-}).setView([19.2185, -99.0015], 17);
+}).setView([19.4326, -99.1332], 12);
 
 // High Quality Dark Tiles
 const darkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -19,14 +19,7 @@ const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/servi
 
 let currentLayer = 'dark';
 
-// Default Marker for User Location
-L.circleMarker([19.2185, -99.0015], {
-    radius: 10,
-    fillColor: "#00e5ff",
-    color: "#fff",
-    weight: 2,
-    fillOpacity: 0.7
-}).addTo(map).bindPopup("Ignacio Zaragoza, San Antonio Tecomitl").openPopup();
+// No default marker, wait for user action
 
 // DOM Elements
 const searchPanel = document.getElementById('search-panel');
