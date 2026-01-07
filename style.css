@@ -1,11 +1,11 @@
 :root {
-    --ds-bg: #00050a;
-    --ds-accent: #00e5ff;
-    --ds-accent-alt: #7b61ff;
-    --ds-glass: rgba(0, 10, 20, 0.75);
-    --ds-border: rgba(0, 229, 255, 0.15);
-    --ds-text: #e0f7fa;
-    --ds-glow: 0 0 20px rgba(0, 229, 255, 0.3);
+    --gps-bg: #00050a;
+    --gps-accent: #00e5ff;
+    --gps-accent-alt: #7b61ff;
+    --gps-glass: rgba(0, 10, 20, 0.75);
+    --gps-border: rgba(0, 229, 255, 0.15);
+    --gps-text: #e0f7fa;
+    --gps-glow: 0 0 20px rgba(0, 229, 255, 0.3);
 }
 
 * {
@@ -19,8 +19,8 @@ body,
 html {
     height: 100%;
     width: 100%;
-    background: var(--ds-bg);
-    color: var(--ds-text);
+    background: var(--gps-bg);
+    color: var(--gps-text);
     overflow: hidden;
 }
 
@@ -31,14 +31,14 @@ html {
     filter: brightness(0.8) contrast(1.2) saturate(0.8);
 }
 
-/* Neural Scan Animation Overlay */
+/* Scan Animation Overlay */
 .scan-line {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(to right, transparent, var(--ds-accent), transparent);
+    background: linear-gradient(to right, transparent, var(--gps-accent), transparent);
     z-index: 5;
     opacity: 0.3;
     pointer-events: none;
@@ -70,10 +70,10 @@ html {
 }
 
 .glass-panel {
-    background: var(--ds-glass);
+    background: var(--gps-glass);
     backdrop-filter: blur(25px) saturate(150%);
     -webkit-backdrop-filter: blur(25px) saturate(150%);
-    border: 1px solid var(--ds-border);
+    border: 1px solid var(--gps-border);
     border-radius: 20px;
     pointer-events: auto;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 229, 255, 0.05);
@@ -81,7 +81,7 @@ html {
 }
 
 .glass-panel:hover {
-    border-color: var(--ds-accent);
+    border-color: var(--gps-accent);
     box-shadow: 0 10px 50px rgba(0, 229, 255, 0.15);
 }
 
@@ -103,7 +103,7 @@ html {
     left: -100%;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, var(--ds-accent), transparent);
+    background: linear-gradient(90deg, transparent, var(--gps-accent), transparent);
     animation: loading-flow 1.5s infinite;
 }
 
@@ -124,8 +124,8 @@ html {
 }
 
 .search-icon {
-    color: var(--ds-accent);
-    filter: drop-shadow(0 0 8px var(--ds-accent));
+    color: var(--gps-accent);
+    filter: drop-shadow(0 0 8px var(--gps-accent));
 }
 
 #search-input {
@@ -160,7 +160,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--ds-accent);
+    color: var(--gps-accent);
     cursor: pointer;
     border-radius: 15px;
 }
@@ -185,7 +185,7 @@ html {
     font-family: 'Outfit', monospace;
     font-size: 0.85rem;
     letter-spacing: 2px;
-    color: var(--ds-accent);
+    color: var(--gps-accent);
     margin-bottom: 8px;
 }
 
@@ -202,31 +202,31 @@ html {
 .pulse-dot {
     width: 6px;
     height: 6px;
-    background: var(--ds-accent);
+    background: var(--gps-accent);
     border-radius: 50%;
-    box-shadow: 0 0 15px var(--ds-accent);
-    animation: pulse-neural 2s infinite;
+    box-shadow: 0 0 15px var(--gps-accent);
+    animation: pulse-effect 2s infinite;
 }
 
-@keyframes pulse-neural {
+@keyframes pulse-effect {
 
     0%,
     100% {
         transform: scale(1);
         opacity: 1;
-        box-shadow: 0 0 10px var(--ds-accent);
+        box-shadow: 0 0 10px var(--gps-accent);
     }
 
     50% {
         transform: scale(1.8);
         opacity: 0.4;
-        box-shadow: 0 0 25px var(--ds-accent);
+        box-shadow: 0 0 25px var(--gps-accent);
     }
 }
 
 /* Leaflet Customization */
 .leaflet-container {
-    background: var(--ds-bg) !important;
+    background: var(--gps-bg) !important;
 }
 
 .leaflet-control-zoom {
@@ -236,24 +236,24 @@ html {
 
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
-    background: var(--ds-glass) !important;
-    color: var(--ds-accent) !important;
+    background: var(--gps-glass) !important;
+    color: var(--gps-accent) !important;
     backdrop-filter: blur(10px) !important;
-    border: 1px solid var(--ds-border) !important;
+    border: 1px solid var(--gps-border) !important;
     border-radius: 10px !important;
     margin-bottom: 5px !important;
 }
 
 .leaflet-popup-content-wrapper {
-    background: var(--ds-glass) !important;
+    background: var(--gps-glass) !important;
     backdrop-filter: blur(10px) !important;
     color: white !important;
-    border: 1px solid var(--ds-border) !important;
+    border: 1px solid var(--gps-border) !important;
     border-radius: 12px !important;
 }
 
 .leaflet-popup-tip {
-    background: var(--ds-glass) !important;
+    background: var(--gps-glass) !important;
 }
 
 /* Responsive */
