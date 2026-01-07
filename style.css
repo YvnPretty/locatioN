@@ -1,11 +1,10 @@
 :root {
     --gps-bg: #00050a;
     --gps-accent: #00e5ff;
-    --gps-accent-alt: #7b61ff;
-    --gps-glass: rgba(0, 10, 20, 0.75);
-    --gps-border: rgba(0, 229, 255, 0.15);
-    --gps-text: #e0f7fa;
-    --gps-glow: 0 0 20px rgba(0, 229, 255, 0.3);
+    --gps-pink: #ff007f;
+    --gps-glass: rgba(0, 10, 20, 0.8);
+    --gps-border: rgba(255, 255, 255, 0.1);
+    --gps-text: #ffffff;
 }
 
 * {
@@ -13,6 +12,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Outfit', sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body,
@@ -22,13 +22,17 @@ html {
     background: var(--gps-bg);
     color: var(--gps-text);
     overflow: hidden;
+    position: fixed;
+    /* Prevent bounce on mobile */
 }
 
 #map {
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     z-index: 1;
-    filter: brightness(0.8) contrast(1.2) saturate(0.8);
+    background: var(--gps-bg);
+    touch-action: none;
+    /* Fix sensitivity on mobile */
 }
 
 /* Scan Animation Overlay */
@@ -40,9 +44,9 @@ html {
     height: 2px;
     background: linear-gradient(to right, transparent, var(--gps-accent), transparent);
     z-index: 5;
-    opacity: 0.3;
+    opacity: 0.2;
     pointer-events: none;
-    animation: scan 4s linear infinite;
+    animation: scan 6s linear infinite;
 }
 
 @keyframes scan {
@@ -66,66 +70,32 @@ html {
     pointer-events: none;
     display: flex;
     flex-direction: column;
-    padding: 30px;
+    padding: 20px;
 }
 
 .glass-panel {
     background: var(--gps-glass);
-    backdrop-filter: blur(25px) saturate(150%);
-    -webkit-backdrop-filter: blur(25px) saturate(150%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--gps-border);
     border-radius: 20px;
     pointer-events: auto;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 229, 255, 0.05);
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
-.glass-panel:hover {
-    border-color: var(--gps-accent);
-    box-shadow: 0 10px 50px rgba(0, 229, 255, 0.15);
-}
-
-/* Search Container */
+/* Search Container - Responsive */
 .search-container {
     align-self: center;
     width: 100%;
-    max-width: 600px;
-    padding: 12px 24px;
+    max-width: 500px;
+    padding: 10px 20px;
     margin-top: 10px;
-    position: relative;
-    overflow: hidden;
-}
-
-.search-container.loading::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gps-accent), transparent);
-    animation: loading-flow 1.5s infinite;
-}
-
-@keyframes loading-flow {
-    0% {
-        left: -100%;
-    }
-
-    100% {
-        left: 100%;
-    }
 }
 
 .search-box {
     display: flex;
     align-items: center;
-    gap: 15px;
-}
-
-.search-icon {
-    color: var(--gps-accent);
-    filter: drop-shadow(0 0 8px var(--gps-accent));
+    gap: 12px;
 }
 
 #search-input {
@@ -134,69 +104,58 @@ html {
     border: none;
     outline: none;
     color: white;
-    font-size: 1.1rem;
-    font-weight: 300;
-    letter-spacing: 0.5px;
+    font-size: 1rem;
 }
 
-#search-input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-}
-
-/* Side Controls */
+/* Side Controls - Responsive */
 .side-controls {
     position: absolute;
-    right: 30px;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
 .btn-control {
-    width: 55px;
-    height: 55px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--gps-accent);
     cursor: pointer;
-    border-radius: 15px;
+    transition: all 0.2s ease;
 }
 
-.btn-control svg {
-    transition: transform 0.3s ease;
+.btn-control:active {
+    transform: scale(0.9);
+    background: rgba(0, 229, 255, 0.2);
 }
 
-.btn-control:hover svg {
-    transform: scale(1.1) rotate(5deg);
-}
-
-/* Info Panel */
+/* Info Panel - Responsive */
 .info-panel {
     margin-top: auto;
     align-self: flex-start;
-    padding: 15px 25px;
-    min-width: 250px;
+    padding: 12px 20px;
+    max-width: 100%;
 }
 
 .coords {
-    font-family: 'Outfit', monospace;
+    font-family: monospace;
     font-size: 0.85rem;
-    letter-spacing: 2px;
     color: var(--gps-accent);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .status {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 3px;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    color: rgba(255, 255, 255, 0.5);
+    gap: 8px;
+    opacity: 0.7;
 }
 
 .pulse-dot {
@@ -204,59 +163,27 @@ html {
     height: 6px;
     background: var(--gps-accent);
     border-radius: 50%;
-    box-shadow: 0 0 15px var(--gps-accent);
-    animation: pulse-effect 2s infinite;
+    animation: pulse 2s infinite;
 }
 
-@keyframes pulse-effect {
-
-    0%,
-    100% {
+@keyframes pulse {
+    0% {
         transform: scale(1);
         opacity: 1;
-        box-shadow: 0 0 10px var(--gps-accent);
     }
 
     50% {
-        transform: scale(1.8);
+        transform: scale(1.5);
         opacity: 0.4;
-        box-shadow: 0 0 25px var(--gps-accent);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
     }
 }
 
-/* Leaflet Customization */
-.leaflet-container {
-    background: var(--gps-bg) !important;
-}
-
-.leaflet-control-zoom {
-    border: none !important;
-    margin-right: 20px !important;
-}
-
-.leaflet-control-zoom-in,
-.leaflet-control-zoom-out {
-    background: var(--gps-glass) !important;
-    color: var(--gps-accent) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid var(--gps-border) !important;
-    border-radius: 10px !important;
-    margin-bottom: 5px !important;
-}
-
-.leaflet-popup-content-wrapper {
-    background: var(--gps-glass) !important;
-    backdrop-filter: blur(10px) !important;
-    color: white !important;
-    border: 1px solid var(--gps-border) !important;
-    border-radius: 12px !important;
-}
-
-.leaflet-popup-tip {
-    background: var(--gps-glass) !important;
-}
-
-/* Responsive */
+/* Mobile Adjustments */
 @media (max-width: 600px) {
     .ui-overlay {
         padding: 15px;
@@ -264,9 +191,38 @@ html {
 
     .search-container {
         max-width: 100%;
+        margin-top: 0;
     }
 
     .side-controls {
         right: 15px;
+        top: auto;
+        bottom: 100px;
+        /* Above info panel */
+        transform: none;
     }
+
+    .info-panel {
+        width: 100%;
+        border-radius: 15px;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .status {
+        justify-content: center;
+    }
+}
+
+/* Leaflet Fixes */
+.leaflet-control-zoom {
+    display: none !important;
+    /* Hide default zoom for cleaner look */
+}
+
+.leaflet-popup-content-wrapper {
+    background: var(--gps-glass) !important;
+    color: white !important;
+    border: 1px solid var(--gps-border) !important;
+    backdrop-filter: blur(10px);
 }

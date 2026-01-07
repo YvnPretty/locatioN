@@ -1,81 +1,66 @@
-// Initialize Map
+// Initialize Map with optimized settings for mobile/desktop
 const map = L.map('map', {
-    zoomControl: true,
-    attributionControl: false
-}).setView([20, 0], 2);
+    zoomControl: false, // Custom UI
+    attributionControl: false,
+    tap: false, // Fixes some click issues on mobile
+    bounceAtZoomLimits: false
+}).setView([20, 0], 3);
 
-// Tile Layers
+// High Quality Dark Tiles
 const darkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 20
+    maxZoom: 20,
+    minZoom: 2
 }).addTo(map);
-
-const voyager = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 20
-});
 
 // DOM Elements
 const searchPanel = document.getElementById('search-panel');
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 const locateBtn = document.getElementById('locate-btn');
-const themeBtn = document.getElementById('theme-btn');
 const latVal = document.getElementById('lat-val');
 const lngVal = document.getElementById('lng-val');
 
-// Update Coords on Move
+// Update Coords with high precision
 map.on('move', () => {
     const center = map.getCenter();
     latVal.textContent = center.lat.toFixed(6);
     lngVal.textContent = center.lng.toFixed(6);
 });
 
-// Search Functionality with improved accuracy
+// Precise Search
 async function searchLocation() {
-    const query = searchInput.value;
+    const query = searchInput.value.trim();
     if (!query) return;
 
-    searchPanel.classList.add('loading');
-    searchInput.placeholder = "Localizando...";
+    searchPanel.style.borderColor = "var(--gps-accent)";
+    searchInput.placeholder = "Buscando...";
 
     try {
-        // Using Nominatim with more parameters for better results
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&addressdetails=1`);
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
         const data = await response.json();
 
         if (data.length > 0) {
             const { lat, lon, display_name } = data[0];
             const target = [parseFloat(lat), parseFloat(lon)];
 
-            // Higher zoom level for better precision (18 is close enough to see streets)
-            map.flyTo(target, 18, {
-                duration: 2.5,
+            map.flyTo(target, 16, {
+                duration: 2,
                 easeLinearity: 0.25
             });
 
-            // Add Marker
-            const marker = L.circleMarker(target, {
-                radius: 12,
+            L.circleMarker(target, {
+                radius: 10,
                 fillColor: "#00e5ff",
                 color: "#fff",
-                weight: 3,
-                opacity: 1,
-                fillOpacity: 0.6
-            }).addTo(map);
-
-            marker.bindPopup(`<div style="font-family: 'Outfit'; padding: 5px;">
-                <b style="color: #00e5ff; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px;">Ubicación Encontrada</b><br>
-                <span style="font-size: 0.9rem;">${display_name}</span>
-            </div>`).openPopup();
-        } else {
-            alert("No se encontró la ubicación.");
+                weight: 2,
+                fillOpacity: 0.7
+            }).addTo(map).bindPopup(display_name).openPopup();
         }
-    } catch (error) {
-        console.error("Error de conexión:", error);
+    } catch (e) {
+        console.error(e);
     } finally {
-        setTimeout(() => {
-            searchPanel.classList.remove('loading');
-            searchInput.placeholder = "Buscar ubicación...";
-        }, 500);
+        searchInput.placeholder = "Buscar ubicación...";
+        searchPanel.style.borderColor = "var(--gps-border)";
     }
 }
 
@@ -84,31 +69,20 @@ searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') searchLocation();
 });
 
-// Locate User with High Accuracy
+// Exact Geolocation
 locateBtn.addEventListener('click', () => {
     map.locate({
         setView: true,
         maxZoom: 18,
-        enableHighAccuracy: true // Crucial for exact location
+        enableHighAccuracy: true
     });
 });
 
 map.on('locationfound', (e) => {
-    // Clear previous location markers if any
-    map.eachLayer((layer) => {
-        if (layer instanceof L.Circle || layer instanceof L.CircleMarker) {
-            if (layer.options.className === 'user-location') {
-                map.removeLayer(layer);
-            }
-        }
-    });
-
     L.circle(e.latlng, e.accuracy / 2, {
         color: '#00e5ff',
-        fillColor: '#00e5ff',
-        fillOpacity: 0.05,
         weight: 1,
-        className: 'user-location'
+        fillOpacity: 0.1
     }).addTo(map);
 
     L.circleMarker(e.latlng, {
@@ -116,34 +90,22 @@ map.on('locationfound', (e) => {
         fillColor: "#00e5ff",
         color: "#fff",
         weight: 2,
-        fillOpacity: 1,
-        className: 'user-location'
+        fillOpacity: 1
     }).addTo(map);
 });
 
-map.on('locationerror', (e) => {
-    alert("Error al obtener ubicación: " + e.message);
-});
-
-// Theme Toggle
-themeBtn.addEventListener('click', () => {
-    if (map.hasLayer(darkMatter)) {
-        map.removeLayer(darkMatter);
-        map.addLayer(voyager);
-    } else {
-        map.removeLayer(voyager);
-        map.addLayer(darkMatter);
-    }
-});
-
-// Click to get exact coords
+// Click for exact coords
 map.on('click', (e) => {
     const { lat, lng } = e.latlng;
     L.popup()
         .setLatLng(e.latlng)
-        .setContent(`<div style="font-family: 'Outfit'; text-align: center; padding: 10px;">
-            <b style="color: #00e5ff; letter-spacing: 2px; font-size: 0.7rem;">COORDENADAS EXACTAS</b><br>
-            <span style="font-family: monospace; font-size: 1rem;">${lat.toFixed(6)}, ${lng.toFixed(6)}</span>
+        .setContent(`<div style="text-align:center; font-size:0.9rem;">
+            <b>COORDENADAS</b><br>${lat.toFixed(6)}, ${lng.toFixed(6)}
         </div>`)
         .openOn(map);
+});
+
+// Fix for window resize
+window.addEventListener('resize', () => {
+    map.invalidateSize();
 });
