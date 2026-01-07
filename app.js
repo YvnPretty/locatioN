@@ -4,7 +4,7 @@ const map = L.map('map', {
     attributionControl: false,
     tap: false, // Fixes some click issues on mobile
     bounceAtZoomLimits: false
-}).setView([19.2177, -98.9880], 16);
+}).setView([19.2185, -99.0015], 17);
 
 // High Quality Dark Tiles
 const darkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -12,8 +12,15 @@ const darkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{
     minZoom: 2
 }).addTo(map);
 
+const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EBP, and the GIS User Community'
+});
+
+let currentLayer = 'dark';
+
 // Default Marker for User Location
-L.circleMarker([19.2177, -98.9880], {
+L.circleMarker([19.2185, -99.0015], {
     radius: 10,
     fillColor: "#00e5ff",
     color: "#fff",
@@ -26,6 +33,7 @@ const searchPanel = document.getElementById('search-panel');
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 const locateBtn = document.getElementById('locate-btn');
+const themeBtn = document.getElementById('theme-btn');
 const latVal = document.getElementById('lat-val');
 const lngVal = document.getElementById('lng-val');
 
@@ -85,6 +93,21 @@ locateBtn.addEventListener('click', () => {
         maxZoom: 18,
         enableHighAccuracy: true
     });
+});
+
+// Toggle Layers (Dark / Satellite)
+themeBtn.addEventListener('click', () => {
+    if (currentLayer === 'dark') {
+        map.removeLayer(darkMatter);
+        map.addLayer(satellite);
+        currentLayer = 'satellite';
+        themeBtn.style.color = "#ffeb3b"; // Yellow for satellite/sun
+    } else {
+        map.removeLayer(satellite);
+        map.addLayer(darkMatter);
+        currentLayer = 'dark';
+        themeBtn.style.color = "var(--gps-accent)";
+    }
 });
 
 map.on('locationfound', (e) => {
